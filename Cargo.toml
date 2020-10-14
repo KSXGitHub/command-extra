@@ -1,0 +1,20 @@
+[package]
+name = "command-extra"
+description = "Additional methods for std::process::Command"
+version = "0.0.0"
+authors = ["khai96_ <hvksmr1996@gmail.com>"]
+edition = "2018"
+readme = "README.md"
+documentation = "https://docs.rs/command-extra"
+repository = "https://github.com/KSXGitHub/command-extra.git"
+keywords = [
+  "process",
+  "subprocess",
+  "utility-trait",
+]
+include = [
+  "/src",
+  "/Cargo.toml",
+  "/README.md",
+  "/LICENSE.md",
+]
