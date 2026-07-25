@@ -21,6 +21,16 @@ pub trait CommandExtra: Sized {
     {
         args.into_iter().fold(self, |cmd, arg| cmd.with_arg(arg))
     }
+
+    fn with_envs<Envs, Key, Value>(self, envs: Envs) -> Self
+    where
+        Envs: IntoIterator<Item = (Key, Value)>,
+        Key: AsRef<OsStr>,
+        Value: AsRef<OsStr>,
+    {
+        envs.into_iter()
+            .fold(self, |cmd, (key, value)| cmd.with_env(key, value))
+    }
 }
 
 impl CommandExtra for Command {
