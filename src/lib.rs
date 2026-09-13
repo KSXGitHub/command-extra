@@ -19,7 +19,7 @@ pub trait CommandExtra: Sized {
         Args: IntoIterator,
         Args::Item: AsRef<OsStr>,
     {
-        args.into_iter().fold(self, |cmd, arg| cmd.with_arg(arg))
+        args.into_iter().fold(self, Self::with_arg)
     }
 
     fn with_envs<Envs, Key, Value>(self, envs: Envs) -> Self
