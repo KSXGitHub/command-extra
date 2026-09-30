@@ -35,6 +35,7 @@
 //! ```
 
 use std::{
+    borrow::Borrow,
     ffi::OsStr,
     path::Path,
     process::{Command, Stdio},
@@ -98,12 +99,15 @@ pub trait CommandExtra: Sized {
     /// Corresponds to [`Command::envs`].
     fn with_envs<Envs, Key, Value>(self, envs: Envs) -> Self
     where
-        Envs: IntoIterator<Item = (Key, Value)>,
+        Envs: IntoIterator,
+        Envs::Item: Borrow<(Key, Value)>,
         Key: AsRef<OsStr>,
         Value: AsRef<OsStr>,
     {
-        envs.into_iter()
-            .fold(self, |cmd, (key, value)| cmd.with_env(key, value))
+        envs.into_iter().fold(self, |cmd, pair| {
+            let (key, value) = pair.borrow();
+            cmd.with_env(key, value)
+        })
     }
 
     /// Removes multiple environment variables.
