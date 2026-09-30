@@ -1,7 +1,6 @@
 # Command Extra
 
 [![Test](https://github.com/KSXGitHub/command-extra/workflows/Test/badge.svg)](https://github.com/KSXGitHub/command-extra/actions?query=workflow%3ATest)
-[![Travis Build Status](https://img.shields.io/travis/KSXGitHub/command-extra/master?label=build&logo=travis)](https://travis-ci.org/KSXGitHub/command-extra)
 [![Crates.io Version](https://img.shields.io/crates/v/command-extra?logo=rust)](https://crates.io/crates/command-extra)
 [![Documentation](https://docs.rs/command-extra/badge.svg)](https://docs.rs/command-extra)
 
