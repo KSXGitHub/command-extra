@@ -43,11 +43,17 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > $installer
           bash $installer --default-toolchain $(cat rust-toolchain) -y
 
-      - name: Build
+      - name: Build (no features)
         run: cargo build --locked
 
-      - name: Test
+      - name: Test (no features)
         run: cargo test
+
+      - name: Build (tokio_process)
+        run: cargo build --features=tokio_process --locked
+
+      - name: Test (tokio_process)
+        run: cargo test --features=tokio_process
 
   clippy_check:
     name: Clippy
@@ -83,10 +89,15 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > $installer
           bash $installer --default-toolchain $(cat rust-toolchain) -y
 
-      - name: Use clippy to lint code
+      - name: Use clippy to lint code (no features)
         shell: bash
         run: |
           cargo clippy -- -D warnings
+
+      - name: Use clippy to lint code (tokio_process)
+        shell: bash
+        run: |
+          cargo clippy --features=tokio_process -- -D warnings
 
   fmt_check:
     name: Fmt
