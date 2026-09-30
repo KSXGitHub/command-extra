@@ -86,6 +86,7 @@ pub trait CommandExtra: Sized {
     /// Adds multiple arguments.
     ///
     /// Corresponds to [`Command::args`].
+    #[inline]
     fn with_args<Args>(self, args: Args) -> Self
     where
         Args: IntoIterator,
@@ -97,6 +98,7 @@ pub trait CommandExtra: Sized {
     /// Sets multiple environment variables.
     ///
     /// Corresponds to [`Command::envs`].
+    #[inline]
     fn with_envs<Envs, Key, Value>(self, envs: Envs) -> Self
     where
         Envs: IntoIterator,
@@ -113,6 +115,7 @@ pub trait CommandExtra: Sized {
     /// Removes multiple environment variables.
     ///
     /// Equivalent to repeated [`Command::env_remove`]; no direct inherent method.
+    #[inline]
     fn without_envs<Keys>(self, keys: Keys) -> Self
     where
         Keys: IntoIterator,
@@ -123,41 +126,49 @@ pub trait CommandExtra: Sized {
 }
 
 impl CommandExtra for Command {
+    #[inline]
     fn with_current_dir(mut self, dir: impl AsRef<Path>) -> Self {
         self.current_dir(dir);
         self
     }
 
+    #[inline]
     fn with_env(mut self, key: impl AsRef<OsStr>, value: impl AsRef<OsStr>) -> Self {
         self.env(key, value);
         self
     }
 
+    #[inline]
     fn without_env(mut self, key: impl AsRef<OsStr>) -> Self {
         self.env_remove(key);
         self
     }
 
+    #[inline]
     fn with_no_env(mut self) -> Self {
         self.env_clear();
         self
     }
 
+    #[inline]
     fn with_arg(mut self, arg: impl AsRef<OsStr>) -> Self {
         self.arg(arg);
         self
     }
 
+    #[inline]
     fn with_stdin(mut self, stdio: Stdio) -> Self {
         self.stdin(stdio);
         self
     }
 
+    #[inline]
     fn with_stdout(mut self, stdio: Stdio) -> Self {
         self.stdout(stdio);
         self
     }
 
+    #[inline]
     fn with_stderr(mut self, stdio: Stdio) -> Self {
         self.stderr(stdio);
         self
