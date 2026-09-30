@@ -19,3 +19,10 @@ include = [
   "/README.md",
   "/LICENSE.md",
 ]
+
+[features]
+default = []
+tokio_process = ["tokio/process"]
+
+[dependencies]
+tokio = { version = "1.53.1", optional = true }

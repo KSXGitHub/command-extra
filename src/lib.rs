@@ -126,7 +126,8 @@ pub trait CommandExtra: Sized {
 }
 
 macro_rules! impl_command_extra {
-    ($command:ty) => {
+    ($(#[$attrs:meta])* $command:ty) => {
+        $(#[$attrs])*
         impl CommandExtra for $command {
             #[inline]
             fn with_current_dir(mut self, dir: impl AsRef<Path>) -> Self {
@@ -181,5 +182,13 @@ macro_rules! impl_command_extra {
 
 impl_command_extra!(Command);
 impl_command_extra!(Box<Command>);
+impl_command_extra!(
+    #[cfg(feature = "tokio_process")]
+    tokio::process::Command
+);
+impl_command_extra!(
+    #[cfg(feature = "tokio_process")]
+    Box<tokio::process::Command>
+);
 
 // no `&mut Command` because inherent methods already deal with it
