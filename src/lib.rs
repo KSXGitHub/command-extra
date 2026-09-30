@@ -125,52 +125,61 @@ pub trait CommandExtra: Sized {
     }
 }
 
-impl CommandExtra for Command {
-    #[inline]
-    fn with_current_dir(mut self, dir: impl AsRef<Path>) -> Self {
-        self.current_dir(dir);
-        self
-    }
+macro_rules! impl_command_extra {
+    ($command:ty) => {
+        impl CommandExtra for $command {
+            #[inline]
+            fn with_current_dir(mut self, dir: impl AsRef<Path>) -> Self {
+                self.current_dir(dir);
+                self
+            }
 
-    #[inline]
-    fn with_env(mut self, key: impl AsRef<OsStr>, value: impl AsRef<OsStr>) -> Self {
-        self.env(key, value);
-        self
-    }
+            #[inline]
+            fn with_env(mut self, key: impl AsRef<OsStr>, value: impl AsRef<OsStr>) -> Self {
+                self.env(key, value);
+                self
+            }
 
-    #[inline]
-    fn without_env(mut self, key: impl AsRef<OsStr>) -> Self {
-        self.env_remove(key);
-        self
-    }
+            #[inline]
+            fn without_env(mut self, key: impl AsRef<OsStr>) -> Self {
+                self.env_remove(key);
+                self
+            }
 
-    #[inline]
-    fn with_no_env(mut self) -> Self {
-        self.env_clear();
-        self
-    }
+            #[inline]
+            fn with_no_env(mut self) -> Self {
+                self.env_clear();
+                self
+            }
 
-    #[inline]
-    fn with_arg(mut self, arg: impl AsRef<OsStr>) -> Self {
-        self.arg(arg);
-        self
-    }
+            #[inline]
+            fn with_arg(mut self, arg: impl AsRef<OsStr>) -> Self {
+                self.arg(arg);
+                self
+            }
 
-    #[inline]
-    fn with_stdin(mut self, stdio: Stdio) -> Self {
-        self.stdin(stdio);
-        self
-    }
+            #[inline]
+            fn with_stdin(mut self, stdio: Stdio) -> Self {
+                self.stdin(stdio);
+                self
+            }
 
-    #[inline]
-    fn with_stdout(mut self, stdio: Stdio) -> Self {
-        self.stdout(stdio);
-        self
-    }
+            #[inline]
+            fn with_stdout(mut self, stdio: Stdio) -> Self {
+                self.stdout(stdio);
+                self
+            }
 
-    #[inline]
-    fn with_stderr(mut self, stdio: Stdio) -> Self {
-        self.stderr(stdio);
-        self
-    }
+            #[inline]
+            fn with_stderr(mut self, stdio: Stdio) -> Self {
+                self.stderr(stdio);
+                self
+            }
+        }
+    };
 }
+
+impl_command_extra!(Command);
+impl_command_extra!(Box<Command>);
+
+// no `&mut Command` because inherent methods already deal with it

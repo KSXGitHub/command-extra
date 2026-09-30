@@ -40,3 +40,10 @@ fn with_envs() {
         cmd.with_envs([("A", "1"), ("B", "2")].iter())
     }
 }
+
+#[test]
+fn boxed() {
+    fn _boxed(cmd: Box<Command>, args: &[&str], envs: &[(&str, &str)]) -> Box<Command> {
+        cmd.with_args(args).with_envs(envs)
+    }
+}
