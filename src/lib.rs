@@ -125,7 +125,7 @@ pub trait CommandExtra: Sized {
     }
 }
 
-macro_rules! impl_command_extra {
+macro_rules! impl_unit {
     ($(#[$attrs:meta])* $command:ty) => {
         $(#[$attrs])*
         impl CommandExtra for $command {
@@ -180,23 +180,20 @@ macro_rules! impl_command_extra {
     };
 }
 
-impl_command_extra!(Command);
-impl_command_extra!(Box<Command>);
-impl_command_extra!(
-    #[cfg(feature = "tokio_process")]
-    tokio::process::Command
-);
-impl_command_extra!(
-    #[cfg(feature = "tokio_process")]
-    Box<tokio::process::Command>
-);
-impl_command_extra!(
+macro_rules! impl_set {
+    ($(#[$attrs:meta])* $base:ty) => {
+        impl_unit!($(#[$attrs])* $base);
+        impl_unit!($(#[$attrs])* Box<$base>);
+        // no `&mut $base` because inherent methods already deal with it
+    };
+}
+
+impl_set!(Command);
+impl_set!(
     #[cfg(feature = "async_process")]
     async_process::Command
 );
-impl_command_extra!(
-    #[cfg(feature = "async_process")]
-    Box<async_process::Command>
+impl_set!(
+    #[cfg(feature = "tokio_process")]
+    tokio::process::Command
 );
-
-// no `&mut Command` because inherent methods already deal with it
