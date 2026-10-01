@@ -190,5 +190,13 @@ impl_command_extra!(
     #[cfg(feature = "tokio_process")]
     Box<tokio::process::Command>
 );
+impl_command_extra!(
+    #[cfg(feature = "async_process")]
+    async_process::Command
+);
+impl_command_extra!(
+    #[cfg(feature = "async_process")]
+    Box<async_process::Command>
+);
 
 // no `&mut Command` because inherent methods already deal with it

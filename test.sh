@@ -21,3 +21,4 @@ cfg --no-default-features
 cfg --all-features
 cfg
 cfg --features tokio_process
+cfg --features async_process
