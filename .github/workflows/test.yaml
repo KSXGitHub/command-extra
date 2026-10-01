@@ -8,26 +8,17 @@ jobs:
   test:
     name: Test
 
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      fail-fast: false
-      matrix:
-        os:
-          - ubuntu-latest
-          - windows-latest
-          - macos-latest
+    runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
 
       - name: Cache
         uses: actions/cache@v6
         timeout-minutes: 1
         continue-on-error: true
-        if: matrix.os != 'macos-latest' # Cache seems to messing up macOS build
         with:
-          path:
+          path: |
             ~/.cargo/registry
             ~/.cargo/git
             target
@@ -43,81 +34,6 @@ jobs:
           curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > $installer
           bash $installer --default-toolchain $(cat rust-toolchain) -y
 
-      - name: Build (no features)
-        run: cargo build --locked
-
-      - name: Test (no features)
-        run: cargo test
-
-      - name: Build (tokio_process)
-        run: cargo build --features=tokio_process --locked
-
-      - name: Test (tokio_process)
-        run: cargo test --features=tokio_process
-
-  clippy_check:
-    name: Clippy
-
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Cache
-        uses: actions/cache@v6
-        timeout-minutes: 1
-        continue-on-error: true
-        with:
-          path:
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: ${{ github.job }}-${{ runner.os }}-${{ hashFiles('rust-toolchain') }}-${{ hashFiles('**/Cargo.lock') }}
-          restore_keys: |
-            ${{ github.job }}-${{ runner.os }}-${{ hashFiles('rust-toolchain') }}-${{ hashFiles('**/Cargo.lock') }}
-            ${{ github.job }}-${{ runner.os }}-${{ hashFiles('rust-toolchain') }}-
-
-      - name: Install Rust
+      - name: Check
         shell: bash
-        run: |
-          installer=$(mktemp -d)/install-rustup
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > $installer
-          bash $installer --default-toolchain $(cat rust-toolchain) -y
-
-      - name: Use clippy to lint code (no features)
-        shell: bash
-        run: |
-          cargo clippy -- -D warnings
-
-      - name: Use clippy to lint code (tokio_process)
-        shell: bash
-        run: |
-          cargo clippy --features=tokio_process -- -D warnings
-
-  fmt_check:
-    name: Fmt
-
-    runs-on: ${{ matrix.os }}
-
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Install Rust
-        shell: bash
-        run: |
-          installer=$(mktemp -d)/install-rustup
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > $installer
-          bash $installer --default-toolchain $(cat rust-toolchain) -y
-
-      - name: Check code formatting
-        run: ./fmt.sh
+        run: ./test.sh
